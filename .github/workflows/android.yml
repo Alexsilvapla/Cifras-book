@@ -45,8 +45,8 @@ jobs:
           test -s www/jszip.min.js
           test -s dist/cifra-livre.html
           grep -q '<script>' dist/cifra-livre.html
-          ! grep -q 'src=\"core.js\"' dist/cifra-livre.html
-          ! grep -q 'src=\"jszip.min.js\"' dist/cifra-livre.html
+          ! grep -q 'src="core.js"' dist/cifra-livre.html
+          ! grep -q 'src="jszip.min.js"' dist/cifra-livre.html
 
       - name: Preparar plataforma Android
         run: |
