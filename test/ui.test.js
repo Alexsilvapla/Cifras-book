@@ -32,7 +32,7 @@ test('visualizador mantém controles essenciais de cifra', () => {
 });
 
 test('filtro de importação ZIP reconhece extensões de cifra', () => {
-  assert.ok(html.includes(String.raw`!(/\\.(txt|cho|pro|crd)$/i)`));
+  assert.ok(html.includes(String.raw`!(/\.(txt|cho|pro|crd)$/i)`));
 });
 
 test('HTML usa tags de scripts esperadas pelo build', () => {
