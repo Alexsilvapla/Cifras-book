@@ -37,3 +37,32 @@ test('importação de .txt', () => {
   assert.strictEqual(C.parseTxt('vazio.txt', '  \n').ok, false);
   assert.strictEqual(C.parseTxt('so_titulo.txt', 'x').title, 'so titulo');
 });
+
+test('importação preserva acentos e remove espaços finais', () => {
+  const x = C.parseTxt('João da Silva - Canção bonita.pro', '\uFEFFC\\nletra com acentuação  \\n');
+  assert.strictEqual(x.artist, 'João da Silva');
+  assert.strictEqual(x.title, 'Canção bonita');
+  assert.strictEqual(x.body, 'C\\nletra com acentuação');
+  assert.strictEqual(x.ok, true);
+  assert.strictEqual(x.warn, false);
+});
+test('importação sinaliza texto com caracteres substitutos', () => {
+  const x = C.parseTxt('arquivo.crd', 'C\\nletra � inválida');
+  assert.strictEqual(x.warn, true);
+});
+test('importação sem artista usa o nome do arquivo como título', () => {
+  const x = C.parseTxt('  Santo_Espírito.txt', 'G\\nVem sobre nós');
+  assert.strictEqual(x.artist, '');
+  assert.strictEqual(x.title, 'Santo Espírito');
+  assert.strictEqual(x.ok, true);
+});
+test('transposição de acordes com baixo mantém o formato', () => {
+  assert.strictEqual(C.transposeLine('D/F#  G/B', 2, 'sharp', 'sharp'), 'E/G#  A/C#');
+});
+test('linhas de letra não são alteradas pela transposição', () => {
+  const lyrics = 'A beleza está em cada detalhe, eu vou cantar';
+  assert.strictEqual(C.transposeLine(lyrics, 5, 'sharp', 'sharp'), lyrics);
+});
+test('normalização de pesquisa ignora caixa e acentos', () => {
+  assert.strictEqual(C.normalize('MÚSICA São João'), 'musica sao joao');
+});
