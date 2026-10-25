@@ -159,7 +159,7 @@ A.new=()=>go('edit',{ret:v});A.newq=()=>go('edit',{ret:v,nq:1});A.gosearch=()=>g
 A.more=()=>menu('Opções',[['Importar arquivos',()=>go('imp')],['Backup e restauração',()=>go('bak')],['Preferências',()=>go('prefs')]]);
 A.cat=d=>go('songs',{cat:d.v,ret:{p:'songs'}});
 A.open=d=>{const s=song(d.id);s.ts=Date.now();save();go('view',{q:[{id:d.id,tr:0}],i:0,ret:v})};
-A.openitem=d=>{const l=list_(v.id);go('view',{q:l.items.map(i=>({id:i.id,tr:i.tr})),i:+d.i,ret:v})};
+A.openitem=d=>{const l=list_(v.id),it=l&&l.items[+d.i],s=it&&song(it.id);if(s){s.ts=Date.now();save()}go('view',{q:l.items.map(i=>({id:i.id,tr:i.tr})),i:+d.i,ret:v})};
 A.togglefav=d=>{const s=song(d.id);if(!s)return;s.favorite=!s.favorite;save();toast(s.favorite?'Adicionada às favoritas.':'Removida das favoritas.');re()};
  A.rowm=d=>{const s=song(d.id);menu(s.title,[['Abrir',()=>A.open(d)],['Editar',()=>go('edit',{id:d.id,ret:v})],[s.favorite?'Remover das favoritas':'Adicionar às favoritas',()=>A.togglefav({id:d.id})],['Adicionar à lista',()=>addTo(d.id)],['Excluir',()=>delSong(d.id)]])};
 async function delSong(id){if(await ask('Excluir “'+song(id).title+'”? Esta ação não pode ser desfeita.','Excluir',1)){db.songs=db.songs.filter(x=>x.id!==id);db.lists.forEach(l=>l.items=l.items.filter(i=>i.id!==id));save();toast('Música excluída.');v.p==='view'||v.p==='edit'?go('songs'):re()}}
