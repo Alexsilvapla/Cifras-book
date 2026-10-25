@@ -39,3 +39,12 @@ test('HTML usa tags de scripts esperadas pelo build', () => {
   assert.ok(html.includes('<script src="jszip.min.js"></script>'));
   assert.ok(html.includes('<script src="core.js"></script>'));
 });
+
+test('abas principais permanecem visíveis nas telas de biblioteca', () => {
+  assert.ok(html.includes('<nav id="tabs" aria-label="Seções principais"></nav>'));
+  assert.match(html, /function tabs\(\)/);
+  for (const label of ['Músicas', 'Artistas', 'Repertórios', 'Favoritas']) {
+    assert.ok(html.includes("['" + (label === 'Músicas' ? 'songs' : label === 'Artistas' ? 'artists' : label === 'Repertórios' ? 'lists' : 'favorites') + "','" + label + "']"), 'Aba principal ausente: ' + label);
+  }
+  assert.match(html, /closest\('\[data-tab\]'\)/);
+});
