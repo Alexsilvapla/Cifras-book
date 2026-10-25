@@ -49,3 +49,12 @@ test('abas principais permanecem visíveis nas telas de biblioteca', () => {
   assert.match(html, /S\.recent\s*=/);
   assert.match(html, /closest\('\[data-tab\]'\)/);
 });
+
+test('tela Artistas gera atributos HTML válidos', () => {
+  const start = html.indexOf('S.artists=');
+  const end = html.indexOf('S.favorites=', start);
+  assert.ok(start >= 0 && end > start, 'Tela Artistas não encontrada');
+  const block = html.slice(start, end);
+  assert.ok(block.includes('class="row" role="button"'), 'Marcação de linha de artista deve usar aspas HTML normais');
+  assert.ok(!block.includes('class=\\\\\\\"row\\\\\\\"'), 'Marcação não deve emitir barras invertidas nos atributos');
+});
