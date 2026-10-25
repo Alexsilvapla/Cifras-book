@@ -46,6 +46,6 @@ test('abas principais permanecem visíveis nas telas de biblioteca', () => {
   for (const [key, label] of [['songs', 'Biblioteca'], ['artists', 'Artistas'], ['lists', 'Repertórios'], ['favorites', 'Favoritas'], ['recent', 'Recentes']]) {
     assert.ok(html.includes("['" + key + "','" + label + "']"), 'Aba principal ausente: ' + label);
   }
-  assert.match(html, /S\\.recent\\s*=/);
+  assert.match(html, /S\.recent\s*=/);
   assert.match(html, /closest\('\[data-tab\]'\)/);
 });
