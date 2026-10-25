@@ -27,7 +27,7 @@ test('recursos musicais estão presentes na interface', () => {
 
 test('visualizador mantém controles essenciais de cifra', () => {
   for (const action of ['addlist', 'share', 'copytext', 'ton', 'fs', 'play', 'full', 'pv', 'nx']) {
-    assert.ok(html.includes('data-a="' + action + '"') || html.includes("data-a=\\""+action+"\\""), 'Ação não encontrada no HTML: ' + action);
+    assert.ok(html.includes('data-a="' + action + '"') || html.includes("data-a='" + action + "'"), 'Ação não encontrada no HTML: ' + action);
   }
 });
 
