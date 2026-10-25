@@ -63,3 +63,9 @@ test('músicas abertas por repertórios entram em Recentes', () => {
   assert.match(html, /A\.openitem=d=>\{const l=list_\(v\.id\),it=l&&l\.items\[\+d\.i\],s=it&&song\(it\.id\);if\(s\)\{s\.ts=Date\.now\(\);save\(\)\}/);
   assert.match(html, /S\.recent\s*=\(\)=>\{bar\('Recentes'\);const L=db\.songs\.filter\(s=>s\.ts\)\.sort\(SORT\.recent\)/);
 });
+
+test('navegação móvel usa barra inferior sem cobrir o conteúdo', () => {
+  assert.match(html, /@media\s*\(max-width:\s*899px\)\s*\{#tabs\{position:fixed;top:auto;bottom:0/);
+  assert.match(html, /main\{padding-bottom:calc\(76px \+ env\(safe-area-inset-bottom,0px\)\)\}/);
+  assert.match(html, /#tabs\[hidden\]\{display:none\}/);
+});
