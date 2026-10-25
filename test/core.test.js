@@ -39,19 +39,19 @@ test('importação de .txt', () => {
 });
 
 test('importação preserva acentos e remove espaços finais', () => {
-  const x = C.parseTxt('João da Silva - Canção bonita.pro', '\uFEFFC\\nletra com acentuação  \\n');
+  const x = C.parseTxt('João da Silva - Canção bonita.pro', '\uFEFFC\nletra com acentuação  \n');
   assert.strictEqual(x.artist, 'João da Silva');
   assert.strictEqual(x.title, 'Canção bonita');
-  assert.strictEqual(x.body, 'C\\nletra com acentuação');
+  assert.strictEqual(x.body, 'C\nletra com acentuação');
   assert.strictEqual(x.ok, true);
   assert.strictEqual(x.warn, false);
 });
 test('importação sinaliza texto com caracteres substitutos', () => {
-  const x = C.parseTxt('arquivo.crd', 'C\\nletra � inválida');
+  const x = C.parseTxt('arquivo.crd', 'C\nletra � inválida');
   assert.strictEqual(x.warn, true);
 });
 test('importação sem artista usa o nome do arquivo como título', () => {
-  const x = C.parseTxt('  Santo_Espírito.txt', 'G\\nVem sobre nós');
+  const x = C.parseTxt('  Santo_Espírito.txt', 'G\nVem sobre nós');
   assert.strictEqual(x.artist, '');
   assert.strictEqual(x.title, 'Santo Espírito');
   assert.strictEqual(x.ok, true);
