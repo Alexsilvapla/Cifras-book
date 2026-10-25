@@ -56,7 +56,7 @@ test('tela Artistas gera atributos HTML válidos', () => {
   assert.ok(start >= 0 && end > start, 'Tela Artistas não encontrada');
   const block = html.slice(start, end);
   assert.ok(block.includes('class="row" role="button"'), 'Marcação de linha de artista deve usar aspas HTML normais');
-  assert.doesNotMatch(block, /class=\\\\+"/, 'Marcação não deve emitir barras invertidas nos atributos');
+  assert.doesNotMatch(block, /class=\\+"/, 'Marcação não deve emitir barras invertidas nos atributos');
 });
 
 test('músicas abertas por repertórios entram em Recentes', () => {
