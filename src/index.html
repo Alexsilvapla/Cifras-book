@@ -12,6 +12,7 @@ body.stage:not(.hc){--bg:#111827;--fg:#f3f4f6;--mu:#9aa6b6;--dv:#2a3547;--cd:#1a
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bl);z-index:30}
 #shell{display:flex;min-height:100vh}#col{flex:1;min-width:0;display:flex;flex-direction:column}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:2px;padding:6px 8px;min-height:56px;background:var(--bl);color:#fff}
+#tabs{display:flex;gap:0;overflow-x:auto;background:var(--bl);color:#fff;border-top:1px solid #ffffff35;position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px);z-index:19;scrollbar-width:none}#tabs::-webkit-scrollbar{display:none}#tabs[hidden]{display:none}#tabs button{flex:1 0 auto;justify-content:center;min-height:46px;padding:8px 14px;border:0;border-radius:0;background:transparent;color:#ffffffc9;white-space:nowrap;font-size:14px}#tabs button[aria-current=page]{color:#fff;font-weight:700;box-shadow:inset 0 -3px #fff}#tabs button:focus-visible{outline:2px solid #fff;outline-offset:-4px}
 :root[data-theme="hc"] header{border-bottom:2px solid #fff}
 header h1{flex:1;font-size:20px;font-weight:500;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ib{width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:inherit;font-size:20px;cursor:pointer;padding:0}
@@ -39,7 +40,7 @@ dialog{border:1px solid var(--dv);border-radius:12px;background:var(--bg);color:
 dialog .row{border:0}#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:60;display:none;max-width:90%}
 .dot{color:#c0362c;font-size:14px}.tag{font-size:12px;border:1px solid var(--mu);border-radius:10px;padding:1px 8px;color:var(--mu)}
 </style></head><body>
-<div id="shell"><nav id="nav" aria-label="Menu principal"></nav><div id="scrim"></div><div id="col"><header id="bar"></header><main id="app"></main></div></div>
+<div id="shell"><nav id="nav" aria-label="Menu principal"></nav><div id="scrim"></div><div id="col"><header id="bar"></header><nav id="tabs" aria-label="Seções principais"></nav><main id="app"></main></div></div>
 <dialog id="dlg"></dialog><div id="toast" role="status" aria-live="polite"></div>
 <script src="jszip.min.js"></script>
 <script src="core.js"></script>
@@ -71,8 +72,9 @@ function unlock(){if(wl){wl.release().catch(()=>{});wl=null}}
 const closeNav=()=>{$('#nav').classList.remove('o');$('#scrim').classList.remove('o')};
 async function go(p,o={}){stopTuner(false);stopMetronome(false);if(v.p==='edit'&&dirty&&!(await ask('Descartar as alterações não salvas?','Descartar',1)))return;dirty=false;stop();v=Object.assign({p},o);t={n:v.q?v.q[v.i].tr||0:0,pol:P().pol};closeNav();render();scrollTo(0,0)}
 function applyChordColor(){const colors={blue:'#1769AA',green:'#198754',orange:'#d97706',red:'#dc2626',purple:'#7c3aed'};document.documentElement.style.setProperty('--ch',colors[P().chordColor]||colors.blue)}
-function render(){applyChordColor();document.body.className=v.p==='stage'?'stage'+(P().theme==='hc'?' hc':''):'';$('#bar').style.display=v.p==='stage'?'none':'';v.p==='stage'?lock():unlock();(S[v.p]||S.songs)();nav()}
+function render(){applyChordColor();document.body.className=v.p==='stage'?'stage'+(P().theme==='hc'?' hc':''):'';$('#bar').style.display=v.p==='stage'?'none':'';v.p==='stage'?lock():unlock();(S[v.p]||S.songs)();nav();tabs()}
 function re(){const y=scrollY;render();scrollTo(0,y)}
+function tabs(){const n=$('#tabs');if(!n)return;const allowed=['songs','artists','lists','favorites'];if(!allowed.includes(v.p)){n.hidden=true;n.innerHTML='';return}n.hidden=false;n.innerHTML=[['songs','Músicas'],['artists','Artistas'],['lists','Repertórios'],['favorites','Favoritas']].map(([k,l])=>'<button data-tab="'+k+'"'+(v.p===k?' aria-current="page"':'')+'>'+l+'</button>').join('')}
 function nav(){const cur=({view:'songs',edit:'songs',list:'lists',stagepick:'stage',stage:'stage'})[v.p]||v.p;
  $('#nav').innerHTML='<div class="hd"><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#fff" opacity=".2"/><path d="M12 22V9l11-2v13" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="10" cy="22" r="3" fill="#fff"/><circle cx="21" cy="20" r="3" fill="#fff"/></svg>Cifra Livre</div>'+NAV.map(([k,l,i])=>'<button class="it" data-g="'+k+'"'+(k===cur?' aria-current="page"':'')+'><span aria-hidden="true">'+i+'</span>'+l+'</button>').join('')}
 function bar(title,o={}){$('#bar').innerHTML=(o.back?'<button class="ib" data-a="back" aria-label="Voltar">‹</button>':'<button class="ib mb" data-m="1" aria-label="Abrir menu">☰</button>')+'<h1>'+esc(title)+'</h1>'+(o.acts||[]).map(([a,l,i])=>'<button class="ib" data-a="'+a+'" aria-label="'+l+'" title="'+l+'">'+i+'</button>').join('')}
@@ -196,7 +198,7 @@ A.dorestore=async()=>{const o=tmp,mode=document.querySelector('input[name=rm]:ch
  else{ns.forEach(x=>{if(!song(x.id))db.songs.push(x)});nl.forEach(x=>{if(!list_(x.id))db.lists.push(x)});if(o.prefs&&$('#rp')&&$('#rp').checked)db.prefs=Object.assign({},DEF,o.prefs)}
  save();theme();tmp=null;toast('Restauração concluída.');go('songs')};
 document.addEventListener('click',e=>{const m=e.target.closest('[data-m]');if(m){$('#nav').classList.add('o');$('#scrim').classList.add('o');return}
- if(e.target.id==='scrim')return closeNav();const g=e.target.closest('[data-g]');if(g)return go(g.dataset.g==='stage'?'stagepick':g.dataset.g);
+ if(e.target.id==='scrim')return closeNav();const tab=e.target.closest('[data-tab]');if(tab)return go(tab.dataset.tab);const g=e.target.closest('[data-g]');if(g)return go(g.dataset.g==='stage'?'stagepick':g.dataset.g);
  const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a]&&!(b.tagName==='INPUT'&&b.type==='checkbox'&&false)){if(b.tagName==='INPUT')return;A[b.dataset.a](b.dataset)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNav();if(v.p==='stage'&&!$('#dlg').open)A.back()}
  if((e.key==='Enter'||e.key===' ')&&e.target.matches('.row[role=button]')){e.preventDefault();e.target.click();return}
