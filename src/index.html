@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cifra Livre</title>
+<style>
+:root{--bl:#1769AA;--gr:#198754;--bg:#fff;--fg:#263241;--mu:#687586;--dv:#E5E9EE;--cd:#f4f6f8;--ch:#1769AA;--pb:#1769AA;--pt:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111827;--fg:#e5e9ee;--mu:#9aa6b6;--dv:#2a3547;--cd:#1a2333;--ch:#7cc0ff}}
+:root[data-theme="dark"]{--bg:#111827;--fg:#e5e9ee;--mu:#9aa6b6;--dv:#2a3547;--cd:#1a2333;--ch:#7cc0ff}
+:root[data-theme="hc"]{--bg:#000;--fg:#fff;--mu:#e6e6e6;--dv:#fff;--cd:#000;--ch:#ffd400;--bl:#000;--pb:#ffd400;--pt:#000}
+body.stage:not(.hc){--bg:#111827;--fg:#f3f4f6;--mu:#9aa6b6;--dv:#2a3547;--cd:#1a2333;--ch:#7cc0ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 Roboto,system-ui,"Segoe UI",sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bl);z-index:30}
+#shell{display:flex;min-height:100vh}#col{flex:1;min-width:0;display:flex;flex-direction:column}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:2px;padding:6px 8px;min-height:56px;background:var(--bl);color:#fff}
+:root[data-theme="hc"] header{border-bottom:2px solid #fff}
+header h1{flex:1;font-size:20px;font-weight:500;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ib{width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:inherit;font-size:20px;cursor:pointer;padding:0}
+main{padding:12px;max-width:820px;width:100%;margin:0 auto;flex:1}
+button,select,.btn{font:inherit;color:var(--fg);background:var(--cd);border:1px solid var(--dv);border-radius:8px;padding:8px 14px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+button.p{background:var(--pb);color:var(--pt);border-color:var(--pb)}button.d{color:#c0362c;border-color:#c0362c}button[disabled]{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid #f5a623;outline-offset:2px}
+input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=file]),textarea{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--mu);border-radius:8px;padding:10px;margin:0 0 8px;min-height:44px}
+textarea{min-height:45vh;font-family:ui-monospace,Consolas,monospace}input[type=checkbox],input[type=radio]{width:22px;height:22px;margin:0 8px 0 0}
+label{display:block;margin:6px 0}.bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}.bar select{width:auto}
+.row{display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--dv);cursor:pointer;min-height:56px}.row>div{flex:1;min-width:0}
+.row b{display:block}.row small,.m{color:var(--mu);font-size:14px}.row>span{width:28px;text-align:center;color:var(--bl)}
+:root[data-theme="hc"] .row>span{color:var(--ch)}h2,h3{margin:14px 0 6px}
+pre{white-space:pre;overflow-x:auto;font-family:ui-monospace,Consolas,monospace;line-height:1.5;margin:10px 0}.ch{color:var(--ch);font-weight:700}
+#nav{width:78%;max-width:300px;position:fixed;inset:0 auto 0 0;z-index:40;background:var(--bg);transform:translateX(-105%);transition:transform .2s;overflow:auto;border-right:1px solid var(--dv)}
+#nav.o{transform:none}#scrim{position:fixed;inset:0;background:#0007;z-index:35;display:none}#scrim.o{display:block}
+#nav .hd{background:linear-gradient(135deg,#198754,#0f6a3f);color:#fff;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px 16px;display:flex;gap:10px;align-items:center;font-size:20px;font-weight:600}
+:root[data-theme="hc"] #nav .hd{background:#000;border-bottom:2px solid #fff}
+#nav .it{display:flex;width:100%;border:0;border-radius:0;background:transparent;text-align:left;padding:10px 16px;gap:14px}#nav .it span{width:22px;text-align:center}
+#nav .it[aria-current=page]{background:var(--cd);font-weight:700;box-shadow:inset 4px 0 var(--pb)}
+@media (min-width:900px){#nav{position:sticky;top:0;align-self:flex-start;height:100vh;transform:none;flex:none;width:280px}#scrim{display:none!important}.mb{display:none}}
+body.stage #nav,body.stage #scrim{display:none!important}body.stage main{padding-bottom:96px}
+.sb{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-items:center;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--bg);border-top:1px solid var(--dv);z-index:20}
+dialog{border:1px solid var(--dv);border-radius:12px;background:var(--bg);color:var(--fg);max-width:420px;width:90%}dialog::backdrop{background:#0008}
+dialog .row{border:0}#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:60;display:none;max-width:90%}
+.dot{color:#c0362c;font-size:14px}.tag{font-size:12px;border:1px solid var(--mu);border-radius:10px;padding:1px 8px;color:var(--mu)}
+</style></head><body>
+<div id="shell"><nav id="nav" aria-label="Menu principal"></nav><div id="scrim"></div><div id="col"><header id="bar"></header><main id="app"></main></div></div>
+<dialog id="dlg"></dialog><div id="toast" role="status" aria-live="polite"></div>
+<script src="core.js"></script>
+<script>
+const C=Core,$=s=>document.querySelector(s),S={},A={};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const KEY='cl:v2',DEF={theme:'auto',fs:18,sp:20,pol:'keep'},NOTES=['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+const NAV=[['songs','Minhas músicas','♫'],['lists','Minhas listas','☰'],['search','Procurar música','⌕'],['imp','Importar arquivos','⤓'],['bak','Backup e restauração','⛁'],['prefs','Preferências','⚙'],['res','Recursos musicais','♪'],['stage','Modo Palco','▣'],['integ','Integrações','⇄'],['help','Ajuda','?'],['about','Sobre o aplicativo','ⓘ']];
+const SORT={artist:(a,b)=>(a.artist+a.title).localeCompare(b.artist+b.title,'pt'),title:(a,b)=>a.title.localeCompare(b.title,'pt'),recent:(a,b)=>(b.ts||0)-(a.ts||0)};
+let db=load(),v={p:'songs'},t={n:0,pol:'keep'},sort='artist',q='',timer=null,acc=0,dirty=false,tmp=null,wl=null,tt;
+function load(){let d=null;try{d=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+ if(!d)try{const o=JSON.parse(localStorage.getItem('cc:v1'));if(o&&o.songs)d={songs:o.songs,lists:(o.lists||[]).map(l=>({id:l.id,name:l.name,items:(l.ids||[]).map(id=>({id,tr:0,note:'',ens:false}))}))}}catch(e){}
+ d=d&&Array.isArray(d.songs)?d:{songs:[],lists:[]};d.lists=d.lists||[];d.prefs=Object.assign({},DEF,d.prefs);return d}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){toast('Não foi possível salvar os dados neste navegador.')}};
+const song=id=>db.songs.find(x=>x.id===id),P=()=>db.prefs,list_=id=>db.lists.find(x=>x.id===id);
+const cid=i=>String(i||'').replace(/[^\w-]/g,'')||uid();
+const cs=o=>o&&typeof o.title==='string'&&typeof o.body==='string'?{id:cid(o.id),title:o.title,artist:String(o.artist||''),key:String(o.key||''),cat:String(o.cat||''),body:o.body,source:String(o.source||'backup'),license:String(o.license||''),fs:clamp(+o.fs||P().fs,10,48),sp:clamp(+o.sp||P().sp,5,80),ts:+o.ts||0}:null;
+const cl=o=>o&&typeof o.name==='string'?{id:cid(o.id),name:o.name,celeb:String(o.celeb||''),date:String(o.date||''),items:(Array.isArray(o.items)?o.items:[]).map(x=>({id:cid(x.id),tr:clamp(+x.tr||0,-11,11),note:String(x.note||''),ens:!!x.ens}))}:null;
+function toast(m){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(tt);tt=setTimeout(()=>e.style.display='none',3500)}
+function dlg(h){return new Promise(r=>{const d=$('#dlg');d.returnValue='';d.innerHTML=h;d.onclick=e=>{const b=e.target.closest('[data-r]');if(b)d.close(b.dataset.r)};d.onclose=()=>r(d.returnValue);d.showModal()})}
+const ask=(m,ok='Confirmar',danger)=>dlg('<p>'+esc(m)+'</p><div class="bar" style="justify-content:flex-end"><button data-r="n">Cancelar</button><button data-r="y" class="'+(danger?'d':'p')+'">'+esc(ok)+'</button></div>').then(x=>x==='y');
+const menu=(t_,its)=>dlg('<h3>'+esc(t_)+'</h3>'+its.map((x,i)=>'<div class="row" role="button" tabindex="0" data-r="'+i+'"><div>'+esc(x[0])+'</div></div>').join('')).then(x=>{if(x!==''&&its[+x])its[+x][1]()});
+const form=(t_,fs,vals={})=>dlg('<h3>'+esc(t_)+'</h3>'+fs.map(([k,l])=>'<label>'+l+'<input id="f_'+k+'" value="'+esc(vals[k]||'')+'"></label>').join('')+'<div class="bar" style="justify-content:flex-end"><button data-r="n">Cancelar</button><button data-r="y" class="p">Salvar</button></div>').then(x=>x==='y'?Object.fromEntries(fs.map(([k])=>[k,$('#f_'+k).value.trim()])):null);
+const theme=()=>{const r=document.documentElement;P().theme==='auto'?r.removeAttribute('data-theme'):r.dataset.theme=P().theme};
+function stop(){if(timer){clearInterval(timer);timer=null}}
+function lock(){if(!wl&&navigator.wakeLock)navigator.wakeLock.request('screen').then(x=>wl=x).catch(()=>{})}
+function unlock(){if(wl){wl.release().catch(()=>{});wl=null}}
+const closeNav=()=>{$('#nav').classList.remove('o');$('#scrim').classList.remove('o')};
+async function go(p,o={}){if(v.p==='edit'&&dirty&&!(await ask('Descartar as alterações não salvas?','Descartar',1)))return;dirty=false;stop();v=Object.assign({p},o);t={n:v.q?v.q[v.i].tr||0:0,pol:P().pol};closeNav();render();scrollTo(0,0)}
+function render(){document.body.className=v.p==='stage'?'stage'+(P().theme==='hc'?' hc':''):'';$('#bar').style.display=v.p==='stage'?'none':'';v.p==='stage'?lock():unlock();(S[v.p]||S.songs)();nav()}
+function re(){const y=scrollY;render();scrollTo(0,y)}
+function nav(){const cur=({view:'songs',edit:'songs',list:'lists',stagepick:'stage',stage:'stage'})[v.p]||v.p;
+ $('#nav').innerHTML='<div class="hd"><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#fff" opacity=".2"/><path d="M12 22V9l11-2v13" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="10" cy="22" r="3" fill="#fff"/><circle cx="21" cy="20" r="3" fill="#fff"/></svg>Cifra Livre</div>'+NAV.map(([k,l,i])=>'<button class="it" data-g="'+k+'"'+(k===cur?' aria-current="page"':'')+'><span aria-hidden="true">'+i+'</span>'+l+'</button>').join('')}
+function bar(title,o={}){$('#bar').innerHTML=(o.back?'<button class="ib" data-a="back" aria-label="Voltar">‹</button>':'<button class="ib mb" data-m="1" aria-label="Abrir menu">☰</button>')+'<h1>'+esc(title)+'</h1>'+(o.acts||[]).map(([a,l,i])=>'<button class="ib" data-a="'+a+'" aria-label="'+l+'" title="'+l+'">'+i+'</button>').join('')}
+const app=h=>{$('#app').innerHTML=h};
+const empty=(h,m,bs)=>'<div style="text-align:center;padding:36px 8px"><h2>'+h+'</h2><p class="m">'+m+'</p><div class="bar" style="justify-content:center">'+bs.map(([a,l,c])=>'<button data-a="'+a+'" class="'+c+'">'+l+'</button>').join('')+'</div></div>';
+const srow=s=>'<div class="row" role="button" tabindex="0" data-a="open" data-id="'+s.id+'"><span aria-hidden="true">♫</span><div><b>'+esc(s.title)+'</b><small>'+esc(s.artist||'Sem artista')+(s.cat?' · '+esc(s.cat):'')+'</small></div><button class="ib" data-a="rowm" data-id="'+s.id+'" aria-label="Opções de '+esc(s.title)+'">⋮</button></div>';
+const lrow=l=>'<div class="row" role="button" tabindex="0" data-a="openlist" data-id="'+l.id+'"><span aria-hidden="true">☰</span><div><b>'+esc(l.name)+'</b><small>'+l.items.length+' música(s)'+(l.celeb?' · '+esc(l.celeb):'')+(l.date?' · '+esc(l.date):'')+'</small></div><button class="ib" data-a="listm" data-id="'+l.id+'" aria-label="Opções de '+esc(l.name)+'">⋮</button></div>';
+const sortSel=()=>'<div class="bar"><label>Ordenar por <select id="so"><option value="artist"'+(sort==='artist'?' selected':'')+'>Artista</option><option value="title"'+(sort==='title'?' selected':'')+'>Título</option><option value="recent"'+(sort==='recent'?' selected':'')+'>Recentes</option></select></label></div>';
+S.songs=()=>{const home=v.cat===undefined;bar(home?'Minhas músicas':v.cat==='*'?'Todos':v.cat,home?{acts:[['new','Adicionar música','+'],['gosearch','Pesquisar','⌕'],['gohelp','Ajuda','?'],['more','Mais opções','⋮']]}:{back:1});
+ if(!db.songs.length)return app(empty('Sua biblioteca está vazia','Adicione uma música ou importe arquivos de texto (.txt).',[['new','Adicionar música','p'],['goimp','Importar arquivos','']]));
+ if(!home){const L=db.songs.filter(s=>v.cat==='*'||s.cat===v.cat).sort(SORT[sort]);return app(sortSel()+(L.map(srow).join('')||'<p class="m">Nenhuma música nesta pasta.</p>'))}
+ const cats=[...new Set(db.songs.map(s=>s.cat).filter(Boolean))].sort(),rc=db.songs.filter(s=>s.ts).sort(SORT.recent).slice(0,3);
+ const fr=(c,n,l)=>'<div class="row" role="button" tabindex="0" data-a="cat" data-v="'+esc(c)+'"><span aria-hidden="true">▤</span><div><b>'+esc(l)+'</b><small>'+n+' música(s)</small></div></div>';
+ app(fr('*',db.songs.length,'Todos')+cats.map(c=>fr(c,db.songs.filter(s=>s.cat===c).length,c)).join('')+(rc.length?'<h3>Recentes</h3>'+rc.map(srow).join(''):'')+(db.lists.length?'<h3>Repertórios</h3>'+db.lists.slice(0,3).map(lrow).join(''):''))};
+S.search=()=>{bar('Procurar música');const k=C.normalize(q),L=k?db.songs.filter(s=>C.normalize(s.title+' '+s.artist).includes(k)).sort(SORT.artist):[];
+ app('<input id="q" type="search" placeholder="Título ou artista" value="'+esc(q)+'" aria-label="Pesquisar">'+'<p class="m">Pesquisa somente na sua biblioteca local. A pesquisa online não está disponível nesta versão.</p><div id="res"></div>');resS()};
+function resS(){const k=C.normalize(q),L=k?db.songs.filter(s=>C.normalize(s.title+' '+s.artist).includes(k)).sort(SORT.artist):[];
+ $('#res').innerHTML=!k?'':L.length?'<h3>Biblioteca local ('+L.length+')</h3>'+L.map(srow).join(''):'<p class="m">Nenhum resultado local para “'+esc(q)+'”.</p><button class="p" data-a="newq">Cadastrar “'+esc(q)+'” manualmente</button>'}
+S.lists=()=>{bar('Minhas listas',{acts:[['newlist','Nova lista','+']]});app(db.lists.length?db.lists.map(lrow).join(''):empty('Nenhum repertório ainda','Crie uma lista para organizar as músicas de uma celebração ou ensaio.',[['newlist','Criar lista','p']]))};
+S.list=()=>{const l=list_(v.id);if(!l)return go('lists');l.items=l.items.filter(i=>song(i.id));
+ bar(l.name,{back:1,acts:[['startlist','Iniciar repertório','▶']]});
+ app('<p class="m">'+[l.celeb,l.date].filter(Boolean).map(esc).join(' · ')+'</p>'+(l.items.map((it,i)=>{const s=song(it.id);return '<div style="border-bottom:1px solid var(--dv);padding:8px 0"><div class="row" style="border:0" role="button" tabindex="0" data-a="openitem" data-i="'+i+'"><span>'+(i+1)+'</span><div><b>'+esc(s.title)+'</b><small>'+esc(s.artist)+'</small></div></div><div class="bar"><span class="m">Tom do evento</span><button data-a="ittr" data-i="'+i+'" data-d="-1" aria-label="Descer semitom">−</button><b>'+(it.tr>0?'+':'')+it.tr+'</b><button data-a="ittr" data-i="'+i+'" data-d="1" aria-label="Subir semitom">+</button><label style="margin:0"><input type="checkbox" data-a="itens" data-i="'+i+'"'+(it.ens?' checked':'')+'>Ensaiada</label><button data-a="itup" data-i="'+i+'" aria-label="Mover para cima">↑</button><button data-a="itdn" data-i="'+i+'" aria-label="Mover para baixo">↓</button><button data-a="itrm" data-i="'+i+'" aria-label="Remover da lista">✕</button></div><input data-n="'+i+'" placeholder="Observações" value="'+esc(it.note)+'" aria-label="Observações"></div>'}).join('')||empty('Lista vazia','Abra uma música e use “Adicionar à lista”.',[])))};
+S.view=()=>{const it=v.q[v.i],s=song(it.id);if(!s)return go('songs');const pol=t.pol,cur=s.key&&C.isChordToken(s.key)?C.transposeLine(s.key,t.n,pol,'sharp'):'';
+ bar(s.title,{back:1,acts:[['edit','Editar','✎'],['togstage','Modo Palco','▣'],['vmenu','Mais opções','⋮']]});
+ const body=C.transposeText(s.body,t.n,pol).split('\n').map(l=>C.isChordLine(l)?'<b class="ch">'+esc(l)+'</b>':esc(l)).join('\n');
+ const o=(k,n)=>'<option value="'+k+'"'+(pol===k?' selected':'')+'>'+n+'</option>';
+ app('<div class="m">'+esc(s.artist)+(cur?' · Tom original: '+esc(s.key)+' · Tom atual: '+esc(cur):t.n?' · Transposição: '+(t.n>0?'+':'')+t.n+' semitons':'')+'</div>'+
+ '<div class="bar"><button data-a="ton" data-d="-1" aria-label="Diminuir semitom">−</button><button data-a="ton" data-d="0" aria-label="Restaurar tom original">Original</button><button data-a="ton" data-d="1" aria-label="Aumentar semitom">+</button>'+
+ (cur?'<select id="ks" aria-label="Escolher tom">'+NOTES.map(n=>'<option'+(C.keyOffset(n,cur)===0?' selected':'')+'>'+n+'</option>').join('')+'</select>':'')+
+ '<select id="pol" aria-label="Padrão de acidentes">'+o('keep','Manter')+o('sharp','Sustenidos #')+o('flat','Bemóis b')+'</select></div>'+
+ '<div class="bar"><button data-a="fs" data-d="-1" aria-label="Diminuir fonte">A−</button><button data-a="fs" data-d="1" aria-label="Aumentar fonte">A+</button><button data-a="play">'+(timer?'⏸ Pausar':'▶ Rolar')+'</button><label style="margin:0">Velocidade <input id="sp" type="range" min="5" max="80" value="'+s.sp+'"></label><button data-a="full" aria-label="Tela cheia">⛶</button></div>'+
+ '<pre style="font-size:'+s.fs+'px">'+body+'</pre>'+(v.q.length>1?'<div class="bar"><button data-a="pv"'+(v.i?'':' disabled')+'>‹ Anterior</button><span class="m">'+(v.i+1)+' de '+v.q.length+'</span><button data-a="nx"'+(v.i<v.q.length-1?'':' disabled')+'>Próxima ›</button></div>':''))};
+S.stage=()=>{const it=v.q[v.i],s=song(it.id);if(!s)return go('stagepick');const cur=s.key&&C.isChordToken(s.key)?C.transposeLine(s.key,t.n,t.pol,'sharp'):'';
+ const body=C.transposeText(s.body,t.n,t.pol).split('\n').map(l=>C.isChordLine(l)?'<b class="ch">'+esc(l)+'</b>':esc(l)).join('\n'),n=v.q.length>1;
+ app('<div class="m">'+esc(s.title)+(cur?' · Tom '+esc(cur):t.n?' · '+(t.n>0?'+':'')+t.n:'')+(n?' · '+(v.i+1)+'/'+v.q.length:'')+'</div><pre style="font-size:'+(s.fs+8)+'px">'+body+'</pre>'+
+ '<div class="sb">'+(n?'<button data-a="pv" aria-label="Música anterior"'+(v.i?'':' disabled')+'>‹</button><button data-a="nx" aria-label="Próxima música"'+(v.i<v.q.length-1?'':' disabled')+'>›</button>':'')+
+ '<button data-a="fs" data-d="-1" aria-label="Diminuir fonte">A−</button><button data-a="fs" data-d="1" aria-label="Aumentar fonte">A+</button><button data-a="ton" data-d="-1" aria-label="Diminuir semitom">♭</button><button data-a="ton" data-d="1" aria-label="Aumentar semitom">♯</button>'+
+ '<button data-a="play" class="p">'+(timer?'⏸':'▶')+'</button><input id="sp" type="range" min="5" max="80" value="'+s.sp+'" aria-label="Velocidade" style="width:90px"><button data-a="full" aria-label="Tela cheia">⛶</button><button data-a="back" aria-label="Sair do Modo Palco">✕</button></div>')};
+S.stagepick=()=>{bar('Modo Palco');const ls=db.lists.filter(l=>l.items.some(i=>song(i.id)));
+ app(!db.songs.length?empty('Nada para tocar','Adicione músicas à biblioteca primeiro.',[['new','Adicionar música','p']]):'<p class="m">Escolha o que levar ao palco. Setas ← → trocam de música e a barra de espaço inicia ou pausa a rolagem.</p>'+ls.map(l=>'<div class="row" role="button" tabindex="0" data-a="stlist" data-id="'+l.id+'"><span>▶</span><div><b>'+esc(l.name)+'</b><small>'+l.items.length+' música(s)</small></div></div>').join('')+'<div class="row" role="button" tabindex="0" data-a="stall"><span>▶</span><div><b>Todas as músicas</b><small>'+db.songs.length+' música(s), por artista</small></div></div>')};
+S.edit=()=>{const s=v.id?song(v.id):{title:q&&v.nq?q:'',artist:'',key:'',cat:'',body:''};const cats=[...new Set(db.songs.map(x=>x.cat).filter(Boolean))];
+ bar(v.id?'Editar música':'Nova música',{back:1,acts:[['save','Salvar','✔']]});
+ app('<div class="dot" id="dm" aria-live="polite">'+(dirty?'● Alterações não salvas':'')+'</div><input data-e id="et" placeholder="Título" aria-label="Título" value="'+esc(s.title)+'"><input data-e id="ea" placeholder="Artista ou compositor" aria-label="Artista" value="'+esc(s.artist)+'">'+
+ '<div class="bar"><input data-e id="ek" placeholder="Tom original (ex.: G ou Em)" aria-label="Tom original" value="'+esc(s.key)+'" style="flex:1;margin:0"><input data-e id="ec" list="cl" placeholder="Pasta (opcional)" aria-label="Pasta" value="'+esc(s.cat)+'" style="flex:1;margin:0"><datalist id="cl">'+cats.map(c=>'<option value="'+esc(c)+'">').join('')+'</datalist></div>'+
+ '<div class="bar"><span class="m">Seções:</span>'+['Intro','Verso','Refrão','Ponte','Final'].map(x=>'<button data-a="sec" data-v="'+x+'">'+x+'</button>').join('')+'<button data-a="paste">Colar</button></div>'+
+ '<textarea data-e id="eb" aria-label="Cifra" placeholder="Acordes em uma linha e a letra na linha de baixo">'+esc(s.body)+'</textarea><div class="bar"><button class="p" data-a="save">Salvar</button><button data-a="back">Cancelar</button></div><p class="m">Use apenas textos de sua autoria, de domínio público ou com licença para uso.</p>')};
+S.imp=()=>{bar('Importar arquivos');app('<p class="m">Formato aceito: <b>.txt</b> (acordes sobre a letra, UTF-8). Outros formatos (.cho, .zip, .cfs) não estão disponíveis nesta versão. Nomes como “Artista - Título.txt” preenchem artista e título.</p><label class="btn">Selecionar arquivos .txt<input type="file" id="fi" accept=".txt,text/plain" multiple hidden></label><div id="pv"></div>')};
+function pvImp(){$('#pv').innerHTML='<h3>Pré-visualização</h3>'+tmp.map((x,i)=>'<div style="border-bottom:1px solid var(--dv);padding:8px 0"><label><input type="checkbox" data-ic="'+i+'"'+(x.sel?' checked':'')+(x.ok?'':' disabled')+'>'+(x.ok?'Importar':'Arquivo vazio: não será importado')+'</label><input data-it="'+i+'" value="'+esc(x.title)+'" aria-label="Título"><input data-ia="'+i+'" value="'+esc(x.artist)+'" placeholder="Artista" aria-label="Artista">'+(x.warn?'<p class="dot">Possível erro de codificação: salve o arquivo como UTF-8.</p>':'')+'<pre class="m" style="font-size:13px;max-height:90px;overflow:hidden">'+esc(x.body.split('\n').slice(0,4).join('\n'))+'</pre></div>').join('')+'<button class="p" data-a="doimp">Importar selecionadas</button>'}
+S.bak=()=>{bar('Backup e restauração');app('<h3>Criar backup</h3><label><input type="checkbox" id="bs" checked>Músicas ('+db.songs.length+')</label><label><input type="checkbox" id="bl" checked>Listas ('+db.lists.length+')</label><label><input type="checkbox" id="bp" checked>Preferências</label><button class="p" data-a="mkbak">Criar backup</button><h3>Restaurar</h3><label class="btn">Selecionar arquivo de backup<input type="file" id="rf" accept=".json,application/json" hidden></label><div id="rs"></div>')};
+S.prefs=()=>{bar('Preferências');const p=P(),o=(k,n,c)=>'<option value="'+k+'"'+(c===k?' selected':'')+'>'+n+'</option>';
+ app('<label>Tema<select id="pt">'+o('auto','Automático (sistema)',p.theme)+o('light','Claro',p.theme)+o('dark','Escuro',p.theme)+o('hc','Alto contraste',p.theme)+'</select></label><label>Tamanho padrão da fonte: <b id="pfv">'+p.fs+'</b><input id="pf" type="range" min="12" max="32" value="'+p.fs+'"></label><label>Velocidade padrão da rolagem: <b id="psv">'+p.sp+'</b><input id="ps" type="range" min="5" max="80" value="'+p.sp+'"></label><label>Padrão de acidentes<select id="pp">'+o('keep','Manter',p.pol)+o('sharp','Sustenidos #',p.pol)+o('flat','Bemóis b',p.pol)+'</select></label><label>Notação de acordes<select id="pn" aria-describedby="pnd"><option>Cifra americana (C, D, E…)</option><option disabled>Solfejo (Dó, Ré, Mi…) — indisponível</option></select></label><p class="m" id="pnd">O tamanho e a velocidade padrão valem para músicas novas; cada música guarda os seus próprios ajustes.</p>')};
+S.res=()=>{bar('Recursos musicais');app('<p class="m">Nenhum recurso musical está disponível nesta versão.</p>'+['Dicionário de acordes','Afinador','Metrônomo'].map(x=>'<div class="row" style="cursor:default"><span>♪</span><div><b>'+x+'</b></div><span class="tag" style="width:auto">Indisponível</span></div>').join('')+'<p class="m">Música litúrgica: em Minhas listas, cada repertório pode registrar celebração e data.</p>')};
+S.integ=()=>{bar('Integrações');app(empty('Nenhuma integração disponível','O app funciona somente no aparelho, sem contas nem serviços online.',[]))};
+S.help=()=>{bar('Ajuda');app('<h3>Começando</h3><p>Em “Minhas músicas”, toque em + para cadastrar uma cifra: acordes em uma linha e a letra logo abaixo. Em “Importar arquivos” você traz arquivos .txt.</p><h3>Transposição</h3><p>Use − e + no visualizador. Informe o “Tom original” no editor para escolher o tom diretamente.</p><h3>Modo Palco</h3><p>Abra pelo menu ou pelo ícone ▣. No computador: ← → trocam de música e a barra de espaço inicia ou pausa a rolagem. Manter a tela ligada depende do aparelho.</p><h3>Seus dados</h3><p>Tudo fica neste aparelho. Faça backup em “Backup e restauração”.</p>')};
+S.about=()=>{bar('Sobre o aplicativo');app('<h3>Cifra Livre 0.2.0 (protótipo)</h3><p>App de cifras original, offline e sem anúncios. Não acessa sites de cifras e não inclui acervo de músicas.</p><p class="m">Cadastre apenas textos de sua autoria, de domínio público ou com licença expressa.</p>')};
+A.back=()=>v.ret?go(v.ret.p,v.ret):go('songs');
+A.new=()=>go('edit',{ret:v});A.newq=()=>go('edit',{ret:v,nq:1});A.gosearch=()=>go('search');A.gohelp=()=>go('help');A.goimp=()=>go('imp');
+A.more=()=>menu('Opções',[['Importar arquivos',()=>go('imp')],['Backup e restauração',()=>go('bak')],['Preferências',()=>go('prefs')]]);
+A.cat=d=>go('songs',{cat:d.v,ret:{p:'songs'}});
+A.open=d=>{const s=song(d.id);s.ts=Date.now();save();go('view',{q:[{id:d.id,tr:0}],i:0,ret:v})};
+A.openitem=d=>{const l=list_(v.id);go('view',{q:l.items.map(i=>({id:i.id,tr:i.tr})),i:+d.i,ret:v})};
+A.rowm=d=>{const s=song(d.id);menu(s.title,[['Abrir',()=>A.open(d)],['Editar',()=>go('edit',{id:d.id,ret:v})],['Adicionar à lista',()=>addTo(d.id)],['Excluir',()=>delSong(d.id)]])};
+async function delSong(id){if(await ask('Excluir “'+song(id).title+'”? Esta ação não pode ser desfeita.','Excluir',1)){db.songs=db.songs.filter(x=>x.id!==id);db.lists.forEach(l=>l.items=l.items.filter(i=>i.id!==id));save();toast('Música excluída.');v.p==='view'||v.p==='edit'?go('songs'):re()}}
+function addTo(id){if(!db.lists.length)return toast('Crie uma lista primeiro em Minhas listas.');menu('Adicionar à lista',db.lists.map(l=>[l.name,()=>{if(l.items.some(i=>i.id===id))return toast('A música já está nessa lista.');l.items.push({id,tr:0,note:'',ens:false});save();toast('Adicionada a “'+l.name+'”.')}]))}
+A.vmenu=()=>{const s=song(v.q[v.i].id);menu(s.title,[['Informações da música',()=>dlg('<h3>'+esc(s.title)+'</h3><p>Artista: '+esc(s.artist||'—')+'<br>Tom original: '+esc(s.key||'não informado')+'<br>Pasta: '+esc(s.cat||'—')+'<br>Origem: '+esc(s.source||'—')+'<br>Licença: '+esc(s.license||'não informada')+'</p><div class="bar" style="justify-content:flex-end"><button data-r="x" class="p">Fechar</button></div>')],['Adicionar à lista',()=>addTo(s.id)],['Excluir',()=>delSong(s.id)]])};
+A.togstage=()=>go('stage',{q:v.q,i:v.i,ret:v});
+A.ton=d=>{t.n=d.d==='0'?0:clamp(t.n+ +d.d,-11,11);re()};
+A.fs=d=>{const s=song(v.q[v.i].id);s.fs=clamp(s.fs+ +d.d*2,10,48);save();re()};
+A.play=()=>{if(timer)stop();else{acc=0;timer=setInterval(()=>{const s=song(v.q[v.i].id);if(!s)return stop();acc+=s.sp/20;const k=Math.floor(acc);if(k>0){scrollBy(0,k);acc-=k}if(innerHeight+scrollY>=document.body.scrollHeight-2){stop();re()}},50)}re()};
+A.full=()=>{const d=document;if(d.fullscreenElement)d.exitFullscreen();else if(d.documentElement.requestFullscreen)d.documentElement.requestFullscreen().catch(()=>toast('Tela cheia indisponível aqui.'));else toast('Tela cheia indisponível neste aparelho.')};
+const step=k=>{stop();v.i+=k;t.n=v.q[v.i].tr||0;re();scrollTo(0,0)};A.nx=()=>{if(v.i<v.q.length-1)step(1)};A.pv=()=>{if(v.i>0)step(-1)};
+A.edit=()=>go('edit',{id:v.q[v.i].id,ret:v});
+A.sec=d=>{const e=$('#eb'),p=e.selectionStart;e.setRangeText('['+d.v+']\n',p,e.selectionEnd,'end');e.focus();mark()};
+A.paste=()=>navigator.clipboard&&navigator.clipboard.readText?navigator.clipboard.readText().then(x=>{$('#eb').value+=x;mark()}).catch(()=>toast('Não foi possível ler a área de transferência. Cole direto no campo.')):toast('Colar automático indisponível. Cole direto no campo.');
+function mark(){dirty=true;const e=$('#dm');if(e)e.textContent='● Alterações não salvas'}
+A.save=()=>{const ti=$('#et').value.trim(),k=$('#ek').value.trim();if(!ti)return toast('Informe o título.');if(k&&!C.isChordToken(k))return toast('Tom inválido. Exemplos: G, Em, Bb.');
+ let s=v.id&&song(v.id),nw=!s;if(nw){s={id:uid(),source:'manual',license:'',fs:P().fs,sp:P().sp,ts:Date.now()};db.songs.push(s)}
+ Object.assign(s,{title:ti,artist:$('#ea').value.trim(),key:k,cat:$('#ec').value.trim(),body:$('#eb').value.replace(/\r\n?/g,'\n')});save();dirty=false;toast('Música salva.');
+ go('view',{q:nw?[{id:s.id,tr:0}]:v.ret&&v.ret.q||[{id:s.id,tr:0}],i:nw?0:v.ret&&v.ret.i||0,ret:v.ret&&v.ret.p==='view'?v.ret.ret:v.ret})};
+A.newlist=async()=>{const r=await form('Nova lista',[['name','Nome'],['celeb','Celebração (opcional)'],['date','Data (opcional)']]);if(r&&r.name){db.lists.push({id:uid(),name:r.name,celeb:r.celeb,date:r.date,items:[]});save();re()}else if(r)toast('Informe o nome da lista.')};
+A.openlist=d=>go('list',{id:d.id,ret:v.p==='list'?v.ret:v});
+A.listm=d=>{const l=list_(d.id);menu(l.name,[['Editar nome e dados',async()=>{const r=await form('Editar lista',[['name','Nome'],['celeb','Celebração'],['date','Data']],l);if(r&&r.name){Object.assign(l,r);save();re()}}],['Duplicar',()=>{db.lists.push(Object.assign(JSON.parse(JSON.stringify(l)),{id:uid(),name:l.name+' (cópia)'}));save();re()}],['Excluir',async()=>{if(await ask('Excluir a lista “'+l.name+'”? As músicas são mantidas.','Excluir',1)){db.lists=db.lists.filter(x=>x!==l);save();re()}}]])};
+A.startlist=()=>{const l=list_(v.id),q_=l.items.filter(i=>song(i.id)).map(i=>({id:i.id,tr:i.tr}));q_.length?go('stage',{q:q_,i:0,ret:v}):toast('A lista está vazia.')};
+A.stlist=d=>{const l=list_(d.id);go('stage',{q:l.items.filter(i=>song(i.id)).map(i=>({id:i.id,tr:i.tr})),i:0,ret:v})};
+A.stall=()=>go('stage',{q:[...db.songs].sort(SORT.artist).map(s=>({id:s.id,tr:0})),i:0,ret:v});
+const itm=d=>list_(v.id).items[+d.i];
+A.ittr=d=>{const it=itm(d);it.tr=clamp(it.tr+ +d.d,-11,11);save();re()};
+A.itens=d=>{const it=itm(d);it.ens=!it.ens;save()};
+A.itup=d=>{const a=list_(v.id).items,i=+d.i;if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];save();re()}};
+A.itdn=d=>{const a=list_(v.id).items,i=+d.i;if(i<a.length-1){[a[i+1],a[i]]=[a[i],a[i+1]];save();re()}};
+A.itrm=d=>{list_(v.id).items.splice(+d.i,1);save();re()};
+A.doimp=()=>{const L=tmp.filter(x=>x.ok&&x.sel);if(!L.length)return toast('Nenhuma música selecionada.');L.forEach(x=>db.songs.push({id:uid(),title:x.title||'Sem título',artist:x.artist,key:'',cat:'',body:x.body,source:'import .txt',license:'',fs:P().fs,sp:P().sp,ts:0}));save();tmp=null;toast(L.length+' música(s) importada(s).');go('songs')};
+A.mkbak=()=>{const o={app:'cifra-livre',v:2,date:new Date().toISOString()};if($('#bs').checked)o.songs=db.songs;if($('#bl').checked)o.lists=db.lists;if($('#bp').checked)o.prefs=db.prefs;
+ const a=document.createElement('a'),n='cifra-livre-backup-'+o.date.slice(0,10)+'.json';a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download=n;a.click();toast('Backup gerado: '+n+' (veja a pasta de downloads).')};
+A.dorestore=async()=>{const o=tmp,mode=document.querySelector('input[name=rm]:checked').value;const ns=(o.songs||[]).map(cs).filter(Boolean),nl=(o.lists||[]).map(cl).filter(Boolean);
+ if(mode==='r'){if(!await ask('Substituir TODOS os dados atuais pelos do backup? Esta ação não pode ser desfeita.','Substituir',1))return;db.songs=ns;db.lists=nl;if(o.prefs&&$('#rp')&&$('#rp').checked)db.prefs=Object.assign({},DEF,o.prefs)}
+ else{ns.forEach(x=>{if(!song(x.id))db.songs.push(x)});nl.forEach(x=>{if(!list_(x.id))db.lists.push(x)});if(o.prefs&&$('#rp')&&$('#rp').checked)db.prefs=Object.assign({},DEF,o.prefs)}
+ save();theme();tmp=null;toast('Restauração concluída.');go('songs')};
+document.addEventListener('click',e=>{const m=e.target.closest('[data-m]');if(m){$('#nav').classList.add('o');$('#scrim').classList.add('o');return}
+ if(e.target.id==='scrim')return closeNav();const g=e.target.closest('[data-g]');if(g)return go(g.dataset.g==='stage'?'stagepick':g.dataset.g);
+ const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a]&&!(b.tagName==='INPUT'&&b.type==='checkbox'&&false)){if(b.tagName==='INPUT')return;A[b.dataset.a](b.dataset)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNav();if(v.p==='stage'&&!$('#dlg').open)A.back()}
+ if((e.key==='Enter'||e.key===' ')&&e.target.matches('.row[role=button]')){e.preventDefault();e.target.click();return}
+ if(v.p==='stage'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)){if(e.key==='ArrowRight')A.nx();else if(e.key==='ArrowLeft')A.pv();else if(e.key===' '){e.preventDefault();A.play()}}});
+document.addEventListener('input',e=>{const x=e.target,i=x.id;
+ if(i==='q'){q=x.value;resS()}else if(i==='sp'){const s=song(v.q[v.i].id);s.sp=+x.value;save()}
+ else if(x.hasAttribute('data-e'))mark();else if(x.dataset.n!==undefined){list_(v.id).items[+x.dataset.n].note=x.value;save()}
+ else if(x.dataset.it!==undefined)tmp[+x.dataset.it].title=x.value;else if(x.dataset.ia!==undefined)tmp[+x.dataset.ia].artist=x.value;
+ else if(i==='pf'){P().fs=+x.value;$('#pfv').textContent=x.value;save()}else if(i==='ps'){P().sp=+x.value;$('#psv').textContent=x.value;save()}});
+document.addEventListener('change',async e=>{const x=e.target,i=x.id;
+ if(i==='so'){sort=x.value;re()}else if(i==='pol'){t.pol=x.value;re()}
+ else if(i==='ks'){const s=song(v.q[v.i].id);t.n=C.keyOffset(s.key,x.value);re()}
+ else if(x.dataset.ic!==undefined)tmp[+x.dataset.ic].sel=x.checked;
+ else if(i==='pt'){P().theme=x.value;save();theme();render()}else if(i==='pp'){P().pol=x.value;save()}
+ else if(x.dataset.a==='itens')A.itens(x.dataset);
+ else if(i==='fi'){tmp=[];for(const f of x.files)tmp.push(Object.assign({sel:true},C.parseTxt(f.name,await f.text())));pvImp()}
+ else if(i==='rf'&&x.files[0]){try{const o=JSON.parse(await x.files[0].text());if(o.app!=='cifra-livre'||!(o.songs||o.lists||o.prefs))throw 0;tmp=o;
+  const ns=(o.songs||[]).map(cs).filter(Boolean),nl=(o.lists||[]).map(cl).filter(Boolean);
+  $('#rs').innerHTML='<h3>Resumo do backup</h3><p>'+ns.length+' música(s) ('+ns.filter(y=>song(y.id)).length+' já existem aqui) · '+nl.length+' lista(s) ('+nl.filter(y=>list_(y.id)).length+' já existem) · preferências: '+(o.prefs?'sim':'não')+'</p>'+(o.prefs?'<label><input type="checkbox" id="rp">Restaurar também as preferências</label>':'')+'<label><input type="radio" name="rm" value="m" checked>Mesclar: manter o que existe e adicionar o que falta</label><label><input type="radio" name="rm" value="r">Substituir tudo: apaga os dados atuais</label><button class="p" data-a="dorestore">Restaurar</button>'}catch(err){tmp=null;$('#rs').innerHTML='<p class="dot">Arquivo inválido: não é um backup do Cifra Livre. Nada foi alterado.</p>'}}});
+theme();render();
+</script></body></html>
