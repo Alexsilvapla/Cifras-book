@@ -43,8 +43,9 @@ test('HTML usa tags de scripts esperadas pelo build', () => {
 test('abas principais permanecem visíveis nas telas de biblioteca', () => {
   assert.ok(html.includes('<nav id="tabs" aria-label="Seções principais"></nav>'));
   assert.match(html, /function tabs\(\)/);
-  for (const label of ['Músicas', 'Artistas', 'Repertórios', 'Favoritas']) {
-    assert.ok(html.includes("['" + (label === 'Músicas' ? 'songs' : label === 'Artistas' ? 'artists' : label === 'Repertórios' ? 'lists' : 'favorites') + "','" + label + "']"), 'Aba principal ausente: ' + label);
+  for (const [key, label] of [['songs', 'Biblioteca'], ['artists', 'Artistas'], ['lists', 'Repertórios'], ['favorites', 'Favoritas'], ['recent', 'Recentes']]) {
+    assert.ok(html.includes("['" + key + "','" + label + "']"), 'Aba principal ausente: ' + label);
   }
+  assert.match(html, /S\\.recent\\s*=/);
   assert.match(html, /closest\('\[data-tab\]'\)/);
 });
