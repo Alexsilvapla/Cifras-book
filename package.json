@@ -1,4 +1,4 @@
 {"name":"cifra-livre","version":"0.2.0","private":true,
 "scripts":{"test":"node --test","build":"node scripts/build.js"},
-"dependencies":{"@capacitor/android":"^6.1.0","@capacitor/core":"^6.1.0"},
+"dependencies":{"@capacitor/android":"^6.1.0","@capacitor/core":"^6.1.0","jszip":"^3.10.1"},
 "devDependencies":{"@capacitor/cli":"^6.1.0"}}
