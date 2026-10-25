@@ -58,3 +58,8 @@ test('tela Artistas gera atributos HTML válidos', () => {
   assert.ok(block.includes('class="row" role="button"'), 'Marcação de linha de artista deve usar aspas HTML normais');
   assert.ok(!block.includes('class=\\\\\\\"row\\\\\\\"'), 'Marcação não deve emitir barras invertidas nos atributos');
 });
+
+test('músicas abertas por repertórios entram em Recentes', () => {
+  assert.match(html, /A\.openitem=d=>\{const l=list_\(v\.id\),it=l&&l\.items\[\+d\.i\],s=it&&song\(it\.id\);if\(s\)\{s\.ts=Date\.now\(\);save\(\)\}/);
+  assert.match(html, /S\.recent\s*=\(\)=>\{bar\('Recentes'\);const L=db\.songs\.filter\(s=>s\.ts\)\.sort\(SORT\.recent\)/);
+});
